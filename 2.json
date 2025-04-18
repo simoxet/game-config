@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.lunosoft.hunteridle",
+    "url": "amzn://apps/android?p=com.lunosoft.hunteridle",
     "fallback": "https://www.amazon.com/dp/B0DXCMJ36S"
 }
