@@ -1,4 +1,4 @@
 {
-    "url": "amzn://apps/android?p=com.infectedgames.clothingfactory",
-    "fallback": "https://www.amazon.com/dp/B0CY3YYCF9"
+    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.gc.wild.pigeon",
+    "fallback": "https://www.amazon.com/dp/B0DRWF6K1R"
 }
