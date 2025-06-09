@@ -1,4 +1,4 @@
 {
-    "url": "amzn://apps/android?p=com.my.catsimulator.game",
+    "url": "amzn://apps/android?p=com.my.catsimulator",
     "fallback": "https://www.amazon.com/dp/B0DY1K7GHY"
 }
