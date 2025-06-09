@@ -1,4 +1,4 @@
 {
-    "url": "amzn://apps/android?p=com.my.catsimulator.game",
-    "fallback": "https://www.amazon.com/dp/B0DY1K7GHY"
+    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.lunosoft.trash",
+    "fallback": "https://www.amazon.com/dp/B0DXCWLGLS"
 }
