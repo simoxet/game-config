@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.csquad.arcade.attackhole.io",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=B0F26R9DS4",
     "fallback": "https://www.amazon.com/dp/B0F26R9DS4"
 }
