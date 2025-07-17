@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.gamepuzzle.basketballgame",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=B0F1DQN3XD",
     "fallback": "https://www.amazon.com/dp/B0F1DQN3XD"
 }
