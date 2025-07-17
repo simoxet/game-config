@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.happykamp.prisoncafeteria",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=B0F26QYC1C",
     "fallback": "https://www.amazon.com/dp/B0F26QYC1C"
 }
