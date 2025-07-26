@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.ow.farmescape",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=com.ow.farmescape",
     "fallback": "https://www.amazon.com/dp/B0DXCJXQWM"
 }

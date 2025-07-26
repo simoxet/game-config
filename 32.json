@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.backpack.sushi",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=com.backpack.sushi",
     "fallback": "https://www.amazon.com/dp/B0DPTMRBZY"
 }

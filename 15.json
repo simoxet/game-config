@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=block.puzzle.jewel.adventure",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=block.puzzle.jewel.adventure",
     "fallback": "https://www.amazon.com/dp/B0DXBSXQLP"
 }

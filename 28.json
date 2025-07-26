@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.lunosoft.trash",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=com.lunosoft.trash",
     "fallback": "https://www.amazon.com/dp/B0DXCWLGLS"
 }

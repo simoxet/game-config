@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.foxduck.btc2",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=com.foxduck.btc2",
     "fallback": "https://www.amazon.com/dp/B0DQ9M9WG5"
 }

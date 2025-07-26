@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.managames.stickman.ninja3vs3.fight",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=com.managames.stickman.ninja3vs3.fight",
     "fallback": "https://www.amazon.com/dp/B0DWRYHSNR"
 }

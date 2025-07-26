@@ -1,4 +1,4 @@
 {
-    "url": "https://www.amazon.com/gp/mas/dl/android?p=com.stickman.escape.floor.is.lava",
+    "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=com.stickman.escape.floor.is.lava",
     "fallback": "https://www.amazon.com/dp/B0DQB32JC6"
 }
