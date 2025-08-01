@@ -1,4 +1,4 @@
 {
     "url": "amzn://apps/android?initiatePurchaseFlow=true&asin=B0F79RJQ52",
-    "fallback": "amzn://apps/android?initiatePurchaseFlow=true&asin=B0F26RBX9L"
+    "fallback": "amzn://apps/android?initiatePurchaseFlow=true&asin=B0F79RJQ52"
 }
