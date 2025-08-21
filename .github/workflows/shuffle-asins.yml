@@ -1,12 +1,13 @@
 name: Shuffle ASINs
 
 on:
-  workflow_dispatch:    # lancer à la main
+  workflow_dispatch:          # lancer à la main
   schedule:
-    - cron: "0 7 * * *" # ~09:00 Europe/Paris
+    # Tous les jours vers 09:00 Europe/Paris
+    - cron: "0 7 * * *"
 
 permissions:
-  contents: write
+  contents: write             # autorise le push
 
 jobs:
   shuffle:
@@ -31,8 +32,10 @@ jobs:
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
             git add -A
             git commit -m "chore: shuffle ASINs ($(date -u +%F))"
             git push
           else
             echo "Aucun changement à committer."
+          fi
