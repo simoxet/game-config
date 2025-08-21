@@ -1,0 +1,38 @@
+name: Shuffle ASINs
+
+on:
+  workflow_dispatch:    # lancer à la main
+  schedule:
+    - cron: "0 7 * * *" # ~09:00 Europe/Paris
+
+permissions:
+  contents: write
+
+jobs:
+  shuffle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run shuffle (root)
+        run: python3 shuffle_asins.py .
+
+      - name: Commit & push if changed
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: shuffle ASINs ($(date -u +%F))"
+            git push
+          else
+            echo "Aucun changement à committer."
