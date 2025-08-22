@@ -1,0 +1,62 @@
+name: Shuffle ASINs from Excel
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # se déclenche toutes les heures en UTC
+  workflow_dispatch: {}    # bouton manuel
+
+permissions:
+  contents: write
+
+jobs:
+  shuffle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install deps
+        run: pip install pandas openpyxl
+
+      - name: Guard: only run 09,12,15,18,21,00 New York
+        id: guard
+        run: |
+          H=$(TZ=America/New_York date +%H)
+          echo "Hour in New_York = $H"
+          case "$H" in
+            09|12|15|18|21|00) echo "ok" > run.flag ;;
+            *) echo "skip" > run.flag ;;
+          esac
+
+      - name: Run shuffle
+        if: always()
+        run: |
+          if [ "$(cat run.flag)" = "ok" ]; then
+            python3 shuffle_asins_from_excel.py
+          else
+            echo "Pas dans la plage horaire, on saute."
+            exit 0
+          fi
+
+      - name: Commit & push if changed
+        if: always()
+        run: |
+          if [ "$(cat run.flag)" = "ok" ]; then
+            if ! git diff --quiet; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git config --global --add safe.directory "$GITHUB_WORKSPACE"
+              git add -A
+              git commit -m "chore: shuffle ASINs from Excel ($(date -u +%F-%H))"
+              git push
+            else
+              echo "Aucun changement."
+            fi
+          fi
