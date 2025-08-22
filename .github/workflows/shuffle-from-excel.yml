@@ -36,7 +36,6 @@ jobs:
           esac
 
       - name: Run shuffle
-        if: always()
         run: |
           if [ "$(cat run.flag)" = "ok" ]; then
             python3 shuffle_asins_from_excel.py
@@ -46,7 +45,6 @@ jobs:
           fi
 
       - name: Commit & push if changed
-        if: always()
         run: |
           if [ "$(cat run.flag)" = "ok" ]; then
             if ! git diff --quiet; then
