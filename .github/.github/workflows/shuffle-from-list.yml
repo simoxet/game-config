@@ -1,0 +1,47 @@
+name: Shuffle ASINs from TXT
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # déclenche chaque heure en UTC
+  workflow_dispatch: {}    # bouton manuel
+
+permissions:
+  contents: write
+
+jobs:
+  shuffle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Guard (run only at 09,12,15,18,21,00 America/New_York)
+        id: guard
+        shell: bash
+        run: |
+          H=$(TZ=America/New_York date +%H)
+          case "$H" in
+            09|12|15|18|21|00) echo "run=true" >> $GITHUB_OUTPUT ;;
+            *)                  echo "run=false" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Run shuffle
+        if: steps.guard.outputs.run == 'true'
+        run: python3 shuffle_asins_from_txt.py
+
+      - name: Commit & push if changed
+        if: steps.guard.outputs.run == 'true'
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+            git add -A
+            git commit -m "chore: shuffle ASINs from TXT ($(date -u +%F-%H))"
+            git push
+          else
+            echo "Aucun changement."
+          fi
