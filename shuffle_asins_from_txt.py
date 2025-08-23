@@ -21,7 +21,7 @@ for i, a in enumerate(raw, 1):
         invalid.append((i, a))
 
 if invalid:
-    print("[WARN] Lignes invalides ignorées (ASIN=10 alphanum) :")
+    print("[WARN] Lignes invalides ignorées (ASIN = 10 alphanum) :")
     for i, a in invalid:
         print(f"  - ligne {i}: '{a}'")
 
@@ -67,21 +67,21 @@ if N == 0:
 
 print(f"[INFO] {N} fichiers cibles.")
 
-# ---------- 3) Construire un plan de comptages avec cap à 3 si possible ----------
-MAX_PER = 3
+# ---------- 3) Construire un plan de comptages avec cap à 2 si possible ----------
+MAX_PER = 2
 target_counts = {a: 0 for a in asins}
 
 if N <= MAX_PER * U:
-    # possible de respecter le plafond 3
+    # possible de respecter le plafond 2
     if N >= U:
         # utiliser chaque ASIN au moins 1 fois
         for a in asins:
             target_counts[a] = 1
         remaining = N - U
-        # capacité restante par ASIN (≤ 2 car déjà 1 posé)
+        # capacité restante par ASIN (≤ 1 car déjà 1 posé)
         bag = []
         for a in asins:
-            cap = MAX_PER - 1  # 2
+            cap = MAX_PER - 1  # 1
             bag.extend([a] * cap)
         random.shuffle(bag)
         for i in range(remaining):
@@ -93,11 +93,10 @@ if N <= MAX_PER * U:
         for a in chos[:N]:
             target_counts[a] = 1
 else:
-    # impossible de rester ≤3 partout : on pose 3 partout, puis on distribue le reste
+    # impossible de rester ≤2 partout : on pose 2 partout, puis on distribue le reste
     for a in asins:
         target_counts[a] = MAX_PER
     remaining = N - MAX_PER * U
-    # distribuer le surplus de manière équilibrée (round-robin aléatoire)
     order = asins[:]
     random.shuffle(order)
     i = 0
@@ -105,7 +104,7 @@ else:
         target_counts[order[i % U]] += 1
         i += 1
         remaining -= 1
-    print(f"[WARN] N={N} > {MAX_PER}×U={MAX_PER*U} : certains ASIN dépasseront 3 (répartition équilibrée).")
+    print(f"[WARN] N={N} > {MAX_PER}×U={MAX_PER*U} : certains ASIN dépasseront 2 (répartition équilibrée).")
 
 # ---------- 4) Construire la pile puis éviter les "fixed points" si possible ----------
 pool = []
