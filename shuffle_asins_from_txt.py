@@ -63,11 +63,35 @@ if not entries:
     print("[INFO] Aucun JSON ciblé trouvé (22..40, a..z).")
     raise SystemExit(0)
 
-# --- fabriquer un tirage aléatoire ---
 N = len(entries)
+
+# --- fabriquer un tirage aléatoire et éviter les "fixed points"
 # répéter la liste si nécessaire pour atteindre N éléments
 pool = (asins * ((N // len(asins)) + 1))[:N]
-random.shuffle(pool)
+original = [old for (_,_,_,old) in entries]
+
+def no_fixed_points(assign):
+    return all(a != b for a, b in zip(original, assign))
+
+ok = None
+for _ in range(500):
+    random.shuffle(pool)
+    if no_fixed_points(pool):
+        ok = pool[:]
+        break
+if ok is None:
+    # correction par échanges simples
+    assign = pool[:]
+    for i, old in enumerate(original):
+        if assign[i] == old:
+            for j in range(i+1, N):
+                if assign[j] != old and assign[i] != original[j]:
+                    assign[i], assign[j] = assign[j], assign[i]
+                    break
+    ok = assign
+
+changed = 0
+unchanged = 0
 
 def replace_asin(url, new_asin):
     if "asin=" in url:
@@ -75,16 +99,17 @@ def replace_asin(url, new_asin):
     sep = "&" if "?" in url else "?"
     return f"{url}{sep}asin={new_asin}"
 
-changed = False
-for (f, data, url, old_asin), new_asin in zip(entries, pool):
+for (f, data, url, old_asin), new_asin in zip(entries, ok):
     new_url = replace_asin(url, new_asin)
     if new_url != url:
         data["QuickDownloadURL"] = new_url
         f.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"[OK] {f.name}: {old_asin} -> {new_asin}")
-        changed = True
+        changed += 1
     else:
         print(f"[INFO] {f.name}: inchangé (même ASIN tiré)")
+        unchanged += 1
 
-if not changed:
+print(f"[INFO] Résumé: {changed} modifiés, {unchanged} inchangés.")
+if changed == 0:
     print("[INFO] Aucun changement écrit (tirage identique).")
