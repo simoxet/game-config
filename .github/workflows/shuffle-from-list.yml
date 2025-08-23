@@ -3,7 +3,7 @@ name: Shuffle ASINs from TXT
 on:
   schedule:
     - cron: "0 * * * *"   # déclenche chaque heure en UTC
-  workflow_dispatch: {}    # bouton manuel
+  workflow_dispatch: {}    # bouton manuel dans Actions
 
 permissions:
   contents: write
@@ -18,7 +18,12 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Guard (run only at 09,12,15,18,21,00 America/New_York)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Guard (autoriser seulement à 09,12,15,18,21,00 New York, sauf manuel)
         id: guard
         shell: bash
         run: |
@@ -29,11 +34,11 @@ jobs:
           esac
 
       - name: Run shuffle
-        if: steps.guard.outputs.run == 'true'
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.guard.outputs.run == 'true' }}
         run: python3 shuffle_asins_from_txt.py
 
       - name: Commit & push if changed
-        if: steps.guard.outputs.run == 'true'
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.guard.outputs.run == 'true' }}
         run: |
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
