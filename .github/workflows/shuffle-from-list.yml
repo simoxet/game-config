@@ -2,8 +2,8 @@ name: Shuffle ASINs from TXT
 
 on:
   schedule:
-    - cron: "0 * * * *"   # déclenche chaque heure en UTC
-  workflow_dispatch: {}    # bouton manuel dans Actions
+    - cron: "0 * * * *"     # déclenche chaque heure en UTC
+  workflow_dispatch: {}      # bouton manuel pour forcer
 
 permissions:
   contents: write
@@ -18,12 +18,8 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Guard (autoriser seulement à 09,12,15,18,21,00 New York, sauf manuel)
+      # Vérifie l'heure locale à New York
+      - name: Guard (NY 09/12/15/18/21/00)
         id: guard
         shell: bash
         run: |
@@ -32,6 +28,12 @@ jobs:
             09|12|15|18|21|00) echo "run=true" >> $GITHUB_OUTPUT ;;
             *)                  echo "run=false" >> $GITHUB_OUTPUT ;;
           esac
+
+      - name: Setup Python
+        if: ${{ github.event_name == 'workflow_dispatch' || steps.guard.outputs.run == 'true' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
 
       - name: Run shuffle
         if: ${{ github.event_name == 'workflow_dispatch' || steps.guard.outputs.run == 'true' }}
