@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, re, random, pathlib, string, math
+import json, re, random, pathlib, string
 from collections import Counter
 
 DIR = pathlib.Path(".")
@@ -25,7 +25,7 @@ if invalid:
     for i, a in invalid:
         print(f"  - ligne {i}: '{a}'")
 
-# dédupliquer en gardant l'ordre
+# Dédupliquer en gardant l'ordre
 seen = set()
 asins = []
 for a in valid:
@@ -40,8 +40,8 @@ if U == 0:
 
 print(f"[INFO] {U} ASIN uniques chargés.")
 
-# ---------- 2) Lister les fichiers cibles 22..40 et a..z ----------
-allowed = {f"{i}.json" for i in range(22, 41)} | {f"{ch}.json" for ch in string.ascii_lowercase}
+# ---------- 2) Lister les fichiers cibles 1..40 et a..z ----------
+allowed = {f"{i}.json" for i in range(1, 41)} | {f"{ch}.json" for ch in string.ascii_lowercase}
 asin_url_re = re.compile(r"(?:^|[?&])asin=([A-Z0-9]{10})\b")
 
 entries = []
@@ -62,7 +62,7 @@ for f in sorted(DIR.glob("*.json")):
 
 N = len(entries)
 if N == 0:
-    print("[INFO] Aucun JSON ciblé trouvé (22..40, a..z).")
+    print("[INFO] Aucun JSON ciblé trouvé (1..40, a..z).")
     raise SystemExit(0)
 
 print(f"[INFO] {N} fichiers cibles.")
@@ -72,13 +72,11 @@ MAX_PER = 2
 target_counts = {a: 0 for a in asins}
 
 if N <= MAX_PER * U:
-    # possible de respecter le plafond 2
     if N >= U:
-        # utiliser chaque ASIN au moins 1 fois
+        # Chaque ASIN au moins une fois
         for a in asins:
             target_counts[a] = 1
         remaining = N - U
-        # capacité restante par ASIN (≤ 1 car déjà 1 posé)
         bag = []
         for a in asins:
             cap = MAX_PER - 1  # 1
@@ -87,13 +85,13 @@ if N <= MAX_PER * U:
         for i in range(remaining):
             target_counts[bag[i]] += 1
     else:
-        # moins de slots que d'ASIN => on en prend N différents
+        # Moins de fichiers que d'ASIN → on prend N ASIN différents
         chos = asins[:]
         random.shuffle(chos)
         for a in chos[:N]:
             target_counts[a] = 1
 else:
-    # impossible de rester ≤2 partout : on pose 2 partout, puis on distribue le reste
+    # Pas possible de rester ≤2 → tout le monde a 2, puis on répartit le reste
     for a in asins:
         target_counts[a] = MAX_PER
     remaining = N - MAX_PER * U
@@ -106,7 +104,7 @@ else:
         remaining -= 1
     print(f"[WARN] N={N} > {MAX_PER}×U={MAX_PER*U} : certains ASIN dépasseront 2 (répartition équilibrée).")
 
-# ---------- 4) Construire la pile puis éviter les "fixed points" si possible ----------
+# ---------- 4) Construire la pile puis éviter les "fixed points" ----------
 pool = []
 for a, cnt in target_counts.items():
     pool.extend([a] * cnt)
@@ -126,7 +124,6 @@ for _ in range(600):
         break
 
 if ok is None:
-    # petite correction par échanges
     assign = pool[:]
     for i, old in enumerate(original_asins):
         if assign[i] == old:
