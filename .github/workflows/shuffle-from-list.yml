@@ -1,15 +1,15 @@
-name: Shuffle ASINs from TXT (daily 15:00 UTC)
+name: Shuffle ASINs (1-40+a-z) + (41-100) from TXT (daily 15:00 UTC)
 
 on:
   schedule:
-    - cron: "0 15 * * *"   # une fois par jour à 15:00 UTC
-  workflow_dispatch: {}     # bouton manuel pour lancer à la main
+    - cron: "0 15 * * *"
+  workflow_dispatch: {}
 
 permissions:
   contents: write
 
 jobs:
-  shuffle:
+  shuffle_both:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,8 +23,13 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Run shuffle
+      # 1er groupe : 1..40 + a..z
+      - name: Run shuffle (1..40 + a..z)
         run: python3 shuffle_asins_from_txt.py
+
+      # 2e groupe : 41..100
+      - name: Run shuffle (41..100)
+        run: python3 shuffle_asins_from_txt_41_100.py
 
       - name: Commit & push if changed
         run: |
@@ -33,7 +38,7 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git config --global --add safe.directory "$GITHUB_WORKSPACE"
             git add -A
-            git commit -m "chore: shuffle ASINs from TXT (15:00 UTC, $(date -u +%F))"
+            git commit -m "chore: shuffle ASINs both sets (15:00 UTC, $(date -u +%F))"
             git push
           else
             echo "Aucun changement."
